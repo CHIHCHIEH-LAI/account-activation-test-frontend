@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>User Activation</title>
+</head>
+<body>
+	<h2>User Activation Page</h2>
+	<div id="response"></div>
+	<script>
+		document.addEventListener('DOMContentLoaded', function() {
+			// Parse the URL query parameters
+			const params = new URLSearchParams(window.location.search);
+			const uid = params.get('uid');
+			const token = params.get('token');
+
+			// Check if both uid and token are present
+			if (uid && token) {
+				// Construct the JSON object to send
+				const data = { uid, token };
+
+				// Define the URL to your Django backend API endpoint
+				const url = 'http://localhost:8000/auth/users/activation/';
+
+				// Use fetch API to send the POST request
+				fetch(url, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify(data),
+				})
+				.then(response => response.json())
+				.then(data => {
+					// Handle response data
+					console.log('Success:', data);
+					document.getElementById('response').innerText = 'Activation successful!';
+				})
+				.catch((error) => {
+					console.error('Error:', error);
+					document.getElementById('response').innerText = 'Activation failed.';
+				});
+			} else {
+				document.getElementById('response').innerText = 'Missing UID or Token.';
+			}
+		});
+	</script>
+</body>
+</html>
